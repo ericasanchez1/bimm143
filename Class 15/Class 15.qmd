@@ -1,0 +1,15 @@
+---
+title: "Class 15: GitHub"
+
+format: html
+---
+
+```{r}
+library(usethis)
+create_github_token()
+```
+```{r}
+library(gitcreds)
+gitcreds_set()
+```
+

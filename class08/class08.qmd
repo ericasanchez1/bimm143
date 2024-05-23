@@ -1,0 +1,187 @@
+---
+title: "Class 8: Breast Cancer Mini Project"
+author: Erica Sanchez (A15787505)
+format: pdf
+---
+
+## About
+
+In today's lab we will work with fine needle aspiration (FNA) of breast mass data from the University of Wisconsin. 
+
+## Data Import
+
+```{r}
+wisc.df <- read.csv("WisconsinCancer.csv", row.names = 1)
+head(wisc.df)
+```
+> Q1. How many patients/individuals are in this dataset? 
+
+```{r}
+nrow(wisc.df)
+```
+
+> Q2. How many of the observations have a malignant diagnosis?
+
+```{r}
+sum(wisc.df$diagnosis == "M")
+```
+
+```{r}
+table(wisc.df$diagnosis)
+```
+
+
+> Q3. How many variables/features in the data are suffixed with _mean?
+
+```{r}
+ncol(wisc.df)
+```
+
+```{r}
+colnames(wisc.df)
+```
+```{r}
+inds <- grep("_mean", colnames(wisc.df))
+length(inds)
+```
+
+```{r}
+grep("_mean", colnames(wisc.df), value=TRUE)
+```
+
+
+## Initial Analysis
+
+Before analysis I want to take out the expert diagnoses column (aka the answrer) from our dataset.
+
+```{r}
+diagnosis <- as.factor(wisc.df$diagnosis)
+head(diagnosis)
+```
+
+```{r}
+wisc.data <- wisc.df[,-1]
+head(wisc.data)
+```
+
+
+## Clustering
+
+We can try a kmeans() clustering first
+
+```{r}
+km <- kmeans(wisc.data, centers = 2)
+table(km$cluster)
+```
+
+```{r}
+table(diagnosis)
+```
+
+
+Cross-table 
+
+```{r}
+table(km$cluster, diagnosis)
+```
+
+Let's try `hclust()` the key input required for `hclust()` is a distance matrix as produced by the `dist()` function
+
+```{r}
+hc <- hclust(dist(wisc.data))
+```
+
+I can make a tree like figure 
+
+```{r}
+plot(hc)
+```
+
+Do we need to scale the data?
+
+We can look at the sd of ach column (original variable)
+
+```{r}
+round(apply(wisc.data, 2, sd))
+```
+
+Yes we need to scale. We will run `prcomp` with `scale=TRUE`
+
+```{r}
+wisc.pr <- prcomp(wisc.data, scale=TRUE)
+summary(wisc.pr)
+```
+
+## PCA
+
+Generate our main PCA plot (score plot, PC1 vs PC2, plot..)
+
+```{r}
+library(ggplot2)
+
+res <- as.data.frame(wisc.pr$x)
+```
+
+```{r}
+ggplot(res) +
+  aes(PC1, PC2, col = diagnosis) +
+  geom_point()
+```
+
+
+## Combining Methods
+
+Clustering on PCA results
+
+Using the minimum number of principal components required to describe at least 90% of the variability in the data, create a hierarchical clustering model with the linkage method="ward.D2". We use Ward’s criterion here because it is based on multidimensional variance like principal components analysis. Assign the results to wisc.pr.hclust.
+
+```{r}
+d <- dist(wisc.pr$x[,1:3])
+hc <- hclust(d, method="ward.D2")
+plot(hc)
+```
+
+To get my clustering result/membership vector I need to "cut" the tree with the `cutree()` function
+
+```{r}
+grps <- cutree(hc, k=2)
+```
+
+> Q1. How many patients are in each cluster group?
+
+```{r}
+table(grps)
+```
+
+```{r}
+plot(res$PC1, res$PC2, col = grps)
+```
+
+> Q17. Which of your analysis procedures resulted in a clustering model with the best specificity? How about sensitivity?
+
+PCA resulted in better specificity and sensitivity.
+
+## Prediction
+
+We can use our PCA result (model) to do prediction, that is take new unseen data and project it onto our new PC variables
+
+```{r}
+url <- "https://tinyurl.com/new-samples-CSV"
+new <- read.csv(url)
+npc <- predict(wisc.pr, newdata=new)
+npc
+```
+
+```{r}
+plot(res$PC1, res$PC2, col = grps)
+points(npc[,1], npc[,2], col="blue", pch=16, cex=3)
+text(npc[,1], npc[,2], labels=c(1, 2), col="white")
+```
+
+> Q18. Which of these new patients should we prioritize for follow up based on your results?
+
+Follow up with group 2
+
+# Summary
+
+Principal Component Analysis (PCA) is a super useful method for analyzing large datasets. It works by finding new variables (PCs) that capture the most variance from the original variables in your dataset.
