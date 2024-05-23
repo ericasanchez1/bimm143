@@ -1,0 +1,49 @@
+---
+title: "Class 11"
+author: "Erica Sanchez (A15787505)"
+date: "May 12, 2024"
+format: pdf
+---
+```{r}
+mxl <- read.csv("SampleGenotypes.csv")
+head(mxl)
+```
+# Section 1 - proportion of (G/G) in a population
+
+```{r}
+table(mxl$Genotype..forward.strand.)
+```
+
+```{r}
+(table(mxl$Genotype..forward.strand.) / nrow(mxl)) *100
+```
+
+# Section 4 - Population Scale Analysis
+
+> Q13: Read this file into R and determine the sample size for each genotype and their corresponding median expression levels for each of these genotypes.
+
+```{r}
+# read the dataset
+filegp <- read.table("https://bioboot.github.io/bggn213_W19/class-material/rs8067378_ENSG00000172057.6.txt", header = T)
+```
+
+```{r}
+summary(filegp)
+```
+```{r}
+str(filegp)
+# calculate the median expression level for each genotype
+medians <- tapply(filegp$exp, filegp$geno, median)
+print(medians)
+# calculate the sample size for each genotype
+sample_sizes <- tapply(filegp$geno, filegp$geno, length)
+print(sample_sizes)
+```
+
+> Q14: Generate a boxplot with a box per genotype, what could you infer from the relative expression value between A/A and G/G displayed in this plot? Does the SNP effect the expression of ORMDL3?
+
+```{r}
+boxplot(exp ~ geno, data = filegp, xlab = "geno", ylab = "exp", main = "exp of ORMDL3 by geno")
+```
+
+The SNP affects the expression of ORMDL3 because the boxplot shows the median expression levels of A/A are higher than the median expression levels of G/G.
