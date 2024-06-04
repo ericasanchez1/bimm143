@@ -3,8 +3,8 @@ This is my classwork for [BIMM 143 Spring 2024] (https://ericasanchez1.github.io
 
 - **Class 5** [Data visualization with ggplot](https://github.com/ericasanchez1/bimm143/blob/main/class05/class05.qmd)
 - **Class 6** [R functions](https://github.com/ericasanchez1/bimm143/blob/main/class06/class06.qmd)
-- **Class 7**
-- **Class 8**
+- **Class 7** [Machine learning 1](https://github.com/ericasanchez1/bimm143/blob/main/class07/Untitled.qmd)
+- **Class 8** 
 - **Class 9**
 - **Class 10**
 - **Class 11**
