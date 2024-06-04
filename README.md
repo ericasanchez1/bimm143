@@ -1,7 +1,7 @@
 # Erica's Portfolio
 This is my classwork for [BIMM 143 Spring 2024] (https://ericasanchez1.github.io/bimm143/) at UC San Diego.
 
-- **Class 5** [Data visualization with ggplot](~/Desktop/BIMM143/bimm143/class05/class05.md)
+- **Class 5** [Data visualization with ggplot]((https://github.com/ericasanchez1/bimm143/blob/main/class05/class05.qmd))
 - **Class 6** [R functions](https://github.com/ericasanchez1/bimm143/blob/main/class06/class06.qmd)
 - **Class 7** [Machine learning 1](https://github.com/ericasanchez1/bimm143/blob/main/class07/Untitled.qmd)
 - **Class 8** [Breast cancer mini project](https://github.com/ericasanchez1/bimm143/blob/main/class08/class08.qmd)
